@@ -110,13 +110,18 @@ def update_notion_cover(image_url: str):
 
 def main():
     print("Generating daily cover image with DALL-E 3...")
-    image_bytes, image_url = generate_image()
+    image_bytes, openai_url = generate_image()
 
     print("Pushing to GitHub...")
     push_to_github(image_bytes)
 
-    print("Updating Notion cover...")
-    update_notion_cover(image_url)
+    # Use a cache-busting GitHub URL so Notion fetches the latest image
+    now = datetime.now(SHANGHAI_TZ)
+    cache_bust = now.strftime("%Y%m%d%H%M")
+    github_url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/main/cover.png?v={cache_bust}"
+
+    print(f"Updating Notion cover with URL: {github_url}")
+    update_notion_cover(github_url)
 
     print("Done.")
 
