@@ -2,8 +2,8 @@ name: Daily Cover Image Update
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 22 * * *"  # 6:00 AM Shanghai time, every day
+  #schedule:
+   # - cron: "0 22 * * *"  # 6:00 AM Shanghai time, every day
 
 permissions:
   contents: write
@@ -20,9 +20,9 @@ jobs:
 
       - name: Generate and push cover image
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: "danneman77/notion_cover"
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_MAIN_PAGE_ID: ${{ secrets.NOTION_MAIN_PAGE_ID }}
+          IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
         run: python update_cover.py
