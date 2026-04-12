@@ -14,10 +14,8 @@ def generate_image() -> bytes:
     date_str = now.strftime("%B %d, %Y")
 
     prompt = (
-        f"A beautiful, minimal, high-quality dashboard cover image for {date_str}.Include date and day in image "
-        "Abstract visualization of global markets, data flows, and world connectivity. "
-        "Dark background with subtle gold and blue tones. "
-        "Cinematic, sophisticated, no text, no numbers, no charts."
+        f"A high-quality dashboard cover image for {date_str}.Include today's date and day in image "
+        "Ultra-premium abstract dashboard cover image, dark matte background, subtle layered gradients, elegant digital structures, refined blue and graphite tones, clean negative space, cinematic but minimal, high-end product design style. No text, no numbers, no logos, no clutter (except today's date/day)."
     )
 
     response = requests.post(
