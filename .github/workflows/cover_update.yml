@@ -5,6 +5,9 @@ on:
   # schedule:
   #  - cron: "0 22 * * *"  # 6:00 AM Shanghai time, every day
 
+permissions:
+  contents: write
+
 jobs:
   update-cover:
     runs-on: ubuntu-latest
