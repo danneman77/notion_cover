@@ -24,12 +24,14 @@ def generate_image():
     prompt = (
     f"A wide, ultra-minimal dark background image, pure dark charcoal or near-black. "
     f"Very subtle, soft blue gradient light from one side. Almost completely empty. "
-    f"In the lower right corner, display the text '{date_str}' in an extremely large, "
-    "clean, modern white sans-serif font. The date text should be massive — "
-    "taking up roughly 30% of the image width. "
+    f"In the lower right corner, display the day and date '{date_str}' in an extremely large, "
+    "clean, modern white sans-serif font. Show only the day name and date number and month — "
+    "for example 'Sunday' on one line and 'April 12' on the next line in massive text. "
+    "Do NOT show the year under any circumstances. "
+    "The text should be huge — taking up roughly 40% of the image width. "
     "Nothing else in the image. No phones, no devices, no UI elements, no charts, "
-    "no circles, no decorative elements, no clutter whatsoever. "
-    "Just dark background, subtle gradient, and the large date text."
+    "no circles, no calendar, no decorative elements, no clutter whatsoever. "
+    "Just dark background, subtle gradient, and the large day and date text."
 )
 
     print(f"Prompt: {prompt}")
