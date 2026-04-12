@@ -37,15 +37,14 @@ def generate_image() -> bytes:
             img.putpixel((x, y), (r, min(g + alpha, 255), min(b + alpha * 3, 255)))
 
     try:
-        font_large = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 280)
-        font_small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 100)
+        font_large = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 168)
+        font_small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 80)
     except Exception:
         font_large = ImageFont.load_default()
         font_small = ImageFont.load_default()
 
     draw.text((120, 180), day_str, font=font_small, fill=(180, 180, 200))
-    draw.rectangle([100, 250, 600, 253], fill=(50, 100, 200))
-    draw.text((100, 280), date_str, font=font_large, fill=(255, 255, 255))
+    draw.text((100, 290), date_str, font=font_large, fill=(255, 255, 255))
 
     buffer = io.BytesIO()
     img.save(buffer, format="PNG")
