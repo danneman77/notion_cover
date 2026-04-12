@@ -6,17 +6,31 @@ from datetime import datetime, timezone, timedelta
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 GITHUB_REPO = os.environ["GITHUB_REPO"]
+NOTION_API_KEY = os.environ["NOTION_API_KEY"]
+NOTION_MAIN_PAGE_ID = os.environ["NOTION_MAIN_PAGE_ID"]
 
 SHANGHAI_TZ = timezone(timedelta(hours=8))
 
-def generate_image() -> bytes:
+NOTION_HEADERS = {
+    "Authorization": f"Bearer {NOTION_API_KEY}",
+    "Content-Type": "application/json",
+    "Notion-Version": "2022-06-28",
+}
+
+def generate_image():
     now = datetime.now(SHANGHAI_TZ)
-    date_str = now.strftime("%B %d, %Y")
+    date_str = now.strftime("%A, %B %d, %Y")
 
     prompt = (
-        f"A high-quality dashboard cover image for {date_str}.Include today's date and day in image "
-        "Ultra-premium abstract dashboard cover image, dark matte background, subtle layered gradients, elegant digital structures, refined blue and graphite tones, clean negative space, cinematic but minimal, high-end product design style. No text, no numbers, no logos, no clutter (except today's date/day)."
+        "Ultra-premium abstract dashboard cover image, dark matte background, "
+        "subtle layered gradients, elegant digital structures, refined blue and graphite tones, "
+        "clean negative space, cinematic but minimal, high-end product design style. "
+        f"Include today's date '{date_str}' as the only text element, "
+        "displayed in a clean, minimal, elegant sans-serif font in the lower right corner. "
+        "No logos, no charts, no clutter."
     )
+
+    print(f"Prompt: {prompt}")
 
     response = requests.post(
         "https://api.openai.com/v1/images/generations",
@@ -42,7 +56,7 @@ def generate_image() -> bytes:
 
     image_bytes = requests.get(image_url).content
     print(f"Downloaded image: {len(image_bytes)} bytes")
-    return image_bytes
+    return image_bytes, image_url
 
 def push_to_github(image_bytes: bytes):
     github_headers = {
@@ -73,14 +87,33 @@ def push_to_github(image_bytes: bytes):
     if put_response.status_code not in [200, 201]:
         print(f"ERROR pushing to GitHub: {put_response.status_code} {put_response.json()}")
     else:
-        print(f"cover.png updated at: https://raw.githubusercontent.com/{GITHUB_REPO}/main/cover.png")
+        print(f"cover.png updated on GitHub.")
+
+def update_notion_cover(image_url: str):
+    response = requests.patch(
+        f"https://api.notion.com/v1/pages/{NOTION_MAIN_PAGE_ID}",
+        headers=NOTION_HEADERS,
+        json={
+            "cover": {
+                "type": "external",
+                "external": {"url": image_url},
+            }
+        },
+    )
+    if response.status_code != 200:
+        print(f"ERROR updating Notion cover: {response.status_code} {response.json()}")
+    else:
+        print("Notion cover updated successfully.")
 
 def main():
     print("Generating daily cover image with DALL-E 3...")
-    image_bytes = generate_image()
+    image_bytes, image_url = generate_image()
 
     print("Pushing to GitHub...")
     push_to_github(image_bytes)
+
+    print("Updating Notion cover...")
+    update_notion_cover(image_url)
 
     print("Done.")
 
