@@ -30,7 +30,7 @@ def generate_image() -> bytes:
             "model": "dall-e-3",
             "prompt": prompt,
             "n": 1,
-            "size": "3000x1200",
+            "size": "1792x1024",
             "quality": "standard",
         },
     )
