@@ -117,19 +117,25 @@ def update_notion_cover(image_url: str):
     else:
         print("Notion cover updated successfully.")
 
-def main():
+defdef main():
     print("Generating cover image...")
     image_bytes = generate_image()
 
-    print("Pushing to GitHub...")
-    push_to_github(image_bytes)
-
-    import time
-    time.sleep(5)
-
-    github_url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/main/cover.png"
     print("Updating Notion cover...")
-    update_notion_cover(github_url)
+    # Upload raw bytes to Notion via a temporary file server
+    # Use transfer.sh — no account needed, free, instant URL
+    response = requests.put(
+        "https://transfer.sh/cover.png",
+        data=image_bytes,
+        headers={"Max-Days": "1"},
+    )
+    temp_url = response.text.strip()
+    print(f"Temporary URL: {temp_url}")
+
+    update_notion_cover(temp_url)
+
+    print("Pushing to GitHub for archive...")
+    push_to_github(image_bytes)
 
     print("Done.")
 
