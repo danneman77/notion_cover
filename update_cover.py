@@ -25,13 +25,13 @@ def generate_image():
     "Ultra-premium abstract dashboard cover image, dark matte background, "
     "subtle layered gradients, elegant digital structures, refined blue and graphite tones, "
     "clean negative space, cinematic but minimal, high-end product design style. "
-    f"Include today's date '{date_str}' as a prominent text element, "
-    "displayed in a large, bold, clean sans-serif font, "
-    "high contrast white or light grey color, clearly visible on mobile screens, "
-    "positioned in the lower right corner. "
+    f"Feature today's date '{date_str}' as the dominant visual element of the image, "
+    "displayed in a very large, bold, heavyweight sans-serif font taking up significant space, "
+    "ultra high contrast bright white color against the dark background, "
+    "large enough to be instantly readable on a small mobile phone screen without zooming, "
+    "positioned in the center-right area of the image. "
     "No logos, no charts, no clutter."
 )
-
 
     print(f"Prompt: {prompt}")
 
