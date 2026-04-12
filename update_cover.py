@@ -22,13 +22,16 @@ def generate_image():
     date_str = now.strftime("%A, %B %d, %Y")
 
     prompt = (
-        "Ultra-premium abstract dashboard cover image, dark matte background, "
-        "subtle layered gradients, elegant digital structures, refined blue and graphite tones, "
-        "clean negative space, cinematic but minimal, high-end product design style. "
-        f"Include today's date '{date_str}' as the only text element, "
-        "displayed in a clean, minimal, elegant sans-serif font in the lower right corner. "
-        "No logos, no charts, no clutter."
-    )
+    "Ultra-premium abstract dashboard cover image, dark matte background, "
+    "subtle layered gradients, elegant digital structures, refined blue and graphite tones, "
+    "clean negative space, cinematic but minimal, high-end product design style. "
+    f"Include today's date '{date_str}' as a prominent text element, "
+    "displayed in a large, bold, clean sans-serif font, "
+    "high contrast white or light grey color, clearly visible on mobile screens, "
+    "positioned in the lower right corner. "
+    "No logos, no charts, no clutter."
+)
+
 
     print(f"Prompt: {prompt}")
 
