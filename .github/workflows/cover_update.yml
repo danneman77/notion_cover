@@ -1,0 +1,23 @@
+name: Daily Cover Image Update
+
+on:
+  workflow_dispatch:
+  # schedule:
+  #  - cron: "0 22 * * *"  # 6:00 AM Shanghai time, every day
+
+jobs:
+  update-cover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+
+      - name: Generate and push cover image
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: "danneman77/notion_cover"
+        run: python update_cover.py
