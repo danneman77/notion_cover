@@ -5,7 +5,6 @@ from datetime import datetime, timezone, timedelta
 from PIL import Image, ImageDraw, ImageFont
 import io
 
-OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 GITHUB_REPO = os.environ["GITHUB_REPO"]
 NOTION_API_KEY = os.environ["NOTION_API_KEY"]
