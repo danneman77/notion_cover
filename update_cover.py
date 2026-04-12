@@ -117,7 +117,7 @@ def update_notion_cover(image_url: str):
     else:
         print("Notion cover updated successfully.")
 
-defdef main():
+def main():
     print("Generating cover image...")
     image_bytes = generate_image()
 
