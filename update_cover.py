@@ -19,19 +19,17 @@ NOTION_HEADERS = {
 
 def generate_image():
     now = datetime.now(SHANGHAI_TZ)
-    date_str = now.strftime("%A, %B %d, %Y")
+    date_str = now.strftime("%A, %B %d")
 
     prompt = (
-    f"A wide, ultra-minimal dark background image, pure dark charcoal or near-black. "
-    f"Very subtle, soft blue gradient light from one side. Almost completely empty. "
-    f"In the lower right corner, display the day and date '{date_str}' in an extremely large, "
-    "clean, modern white sans-serif font. Show only the day name and date number and month — "
-    "for example 'Sunday' on one line and 'April 12' on the next line in massive text. "
-    "Do NOT show the year under any circumstances. "
-    "The text should be huge — taking up roughly 40% of the image width. "
-    "Nothing else in the image. No phones, no devices, no UI elements, no charts, "
-    "no circles, no calendar, no decorative elements, no clutter whatsoever. "
-    "Just dark background, subtle gradient, and the large day and date text."
+    "A minimalist typographic poster. Pure black background. "
+    "No devices, no phones, no screens, no frames, no objects of any kind. "
+    "Just text on a black background. "
+    f"The word '{now.strftime('%A')}' in medium-sized clean white sans-serif at the top. "
+    f"Below it, '{now.strftime('%B %d')}' in enormous, bold, heavy white sans-serif text "
+    "that dominates the entire image — font size equivalent to filling half the image height. "
+    "Slight blue glow or shadow behind the large text for depth. "
+    "Nothing else. No decoration, no UI, no charts, no circles, no gradients, no clutter."
 )
 
     print(f"Prompt: {prompt}")
