@@ -2,6 +2,8 @@ import os
 import base64
 import requests
 from datetime import datetime, timezone, timedelta
+from PIL import Image, ImageDraw, ImageFont
+import io
 
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
@@ -17,48 +19,46 @@ NOTION_HEADERS = {
     "Notion-Version": "2022-06-28",
 }
 
-def generate_image():
+def generate_image() -> bytes:
     now = datetime.now(SHANGHAI_TZ)
-    date_str = now.strftime("%A, %B %d")
+    day_str = now.strftime("%A").upper()       # SUNDAY
+    date_str = now.strftime("%B %d").upper()   # APRIL 12
 
-    prompt = (
-    "Flat digital image, no frames, no borders, no physical objects. "
-    "Pure solid black background filling the entire canvas edge to edge. "
-    f"Large white text '{now.strftime('%A')}' in the upper left. "
-    f"Below it, very large bold white text '{now.strftime('%B %d')}' "
-    "in a heavy sans-serif font, taking up most of the image. "
-    "Absolutely nothing else. No lines, no shapes, no decoration, "
-    "no gradients, no frames, no poster effect, no shadow behind the image. "
-    "The image IS the background — flat, digital, pure black with white text only."
-)
+    # Canvas — 1792x1024 to match previous DALL-E size
+    width, height = 1792, 1024
+    img = Image.new("RGB", (width, height), color=(10, 10, 15))
+    draw = ImageDraw.Draw(img)
 
-    print(f"Prompt: {prompt}")
+    # Subtle blue gradient overlay on left side
+    for x in range(width // 2):
+        alpha = int(18 * (1 - x / (width // 2)))
+        for y in range(height):
+            r, g, b = img.getpixel((x, y))
+            img.putpixel((x, y), (r, min(g + alpha, 255), min(b + alpha * 3, 255)))
 
-    response = requests.post(
-        "https://api.openai.com/v1/images/generations",
-        headers={
-            "Authorization": f"Bearer {OPENAI_API_KEY}",
-            "Content-Type": "application/json",
-        },
-        json={
-            "model": "dall-e-3",
-            "prompt": prompt,
-            "n": 1,
-            "size": "1792x1024",
-            "quality": "standard",
-        },
-    )
+    # Try to use a bold system font, fall back to default
+    try:
+        font_large = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 280)
+        font_small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 100)
+    except Exception:
+        font_large = ImageFont.load_default()
+        font_small = ImageFont.load_default()
 
-    if response.status_code != 200:
-        print(f"OpenAI error: {response.status_code} {response.json()}")
-        response.raise_for_status()
+    # Draw day name (smaller, lighter)
+    draw.text((120, 180), day_str, font=font_small, fill=(180, 180, 200))
 
-    image_url = response.json()["data"][0]["url"]
-    print(f"Generated image URL: {image_url}")
+    # Draw date (huge, dominant)
+    draw.text((100, 280), date_str, font=font_large, fill=(255, 255, 255))
 
-    image_bytes = requests.get(image_url).content
-    print(f"Downloaded image: {len(image_bytes)} bytes")
-    return image_bytes, image_url
+    # Thin horizontal accent line
+    draw.rectangle([100, 250, 600, 253], fill=(50, 100, 200))
+
+    # Convert to bytes
+    buffer = io.BytesIO()
+    img.save(buffer, format="PNG")
+    image_bytes = buffer.getvalue()
+    print(f"Generated image: {len(image_bytes)} bytes")
+    return image_bytes
 
 def push_to_github(image_bytes: bytes):
     github_headers = {
@@ -89,10 +89,10 @@ def push_to_github(image_bytes: bytes):
     if put_response.status_code not in [200, 201]:
         print(f"ERROR pushing to GitHub: {put_response.status_code} {put_response.json()}")
     else:
-        print(f"cover.png updated on GitHub.")
+        print("cover.png updated on GitHub.")
 
 def update_notion_cover(image_url: str):
-    # Step 1 — remove current cover
+    # Clear first
     requests.patch(
         f"https://api.notion.com/v1/pages/{NOTION_MAIN_PAGE_ID}",
         headers=NOTION_HEADERS,
@@ -103,7 +103,6 @@ def update_notion_cover(image_url: str):
     import time
     time.sleep(2)
 
-    # Step 2 — set new cover
     response = requests.patch(
         f"https://api.notion.com/v1/pages/{NOTION_MAIN_PAGE_ID}",
         headers=NOTION_HEADERS,
@@ -120,14 +119,18 @@ def update_notion_cover(image_url: str):
         print("Notion cover updated successfully.")
 
 def main():
-    print("Generating daily cover image with DALL-E 3...")
-    image_bytes, openai_url = generate_image()
+    print("Generating cover image...")
+    image_bytes = generate_image()
 
-    print("Updating Notion cover...")
-    update_notion_cover(openai_url)
-
-    print("Pushing to GitHub for archive...")
+    print("Pushing to GitHub...")
     push_to_github(image_bytes)
+
+    import time
+    time.sleep(5)
+
+    github_url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/main/cover.png"
+    print("Updating Notion cover...")
+    update_notion_cover(github_url)
 
     print("Done.")
 
