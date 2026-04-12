@@ -22,14 +22,14 @@ def generate_image():
     date_str = now.strftime("%A, %B %d")
 
     prompt = (
-    "A minimalist typographic poster. Pure black background. "
-    "No devices, no phones, no screens, no frames, no objects of any kind. "
-    "Just text on a black background. "
-    f"The word '{now.strftime('%A')}' in medium-sized clean white sans-serif at the top. "
-    f"Below it, '{now.strftime('%B %d')}' in enormous, bold, heavy white sans-serif text "
-    "that dominates the entire image — font size equivalent to filling half the image height. "
-    "Slight blue glow or shadow behind the large text for depth. "
-    "Nothing else. No decoration, no UI, no charts, no circles, no gradients, no clutter."
+    "Flat digital image, no frames, no borders, no physical objects. "
+    "Pure solid black background filling the entire canvas edge to edge. "
+    f"Large white text '{now.strftime('%A')}' in the upper left. "
+    f"Below it, very large bold white text '{now.strftime('%B %d')}' "
+    "in a heavy sans-serif font, taking up most of the image. "
+    "Absolutely nothing else. No lines, no shapes, no decoration, "
+    "no gradients, no frames, no poster effect, no shadow behind the image. "
+    "The image IS the background — flat, digital, pure black with white text only."
 )
 
     print(f"Prompt: {prompt}")
