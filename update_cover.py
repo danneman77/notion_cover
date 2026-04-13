@@ -45,9 +45,9 @@ def generate_image() -> bytes:
         font_small = ImageFont.load_default()
         font_title = ImageFont.load_default()
 
-    draw.text((120, 550), day_str, font=font_small, fill=(180, 180, 200))
-    draw.text((100, 650), date_str, font=font_large, fill=(255, 255, 255))
-    draw.text((120, 850), "D'S DASHBOARD", font=font_title, fill=(100, 130, 200))
+    draw.text((120, 400), day_str, font=font_small, fill=(180, 180, 200))
+    draw.text((100, 500), date_str, font=font_large, fill=(255, 255, 255))
+    draw.text((120, 650), "D'S DASHBOARD", font=font_title, fill=(100, 130, 200))
 
     buffer = io.BytesIO()
     img.save(buffer, format="PNG")
